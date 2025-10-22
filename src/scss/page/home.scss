@@ -1,0 +1,663 @@
+:root {
+  /* Base colors */
+  --bg-1: #0b1220;
+  --bg-2: #0f1724;
+  --bg: linear-gradient(180deg, var(--bg-1), var(--bg-2));
+  --accent-start: #ffab00;
+  --accent-end: #ff4b00;
+  --accent-gradient: linear-gradient(
+    90deg,
+    var(--accent-start),
+    var(--accent-end)
+  );
+  --accent-2: #4ca1af; /* optional secondary accent */
+  --glass: rgba(255, 255, 255, 0.03);
+  --muted: #9aa6ba;
+  --text: #fff;
+  --card-contrast: rgba(255, 255, 255, 0.08);
+  --border-weak: rgba(255, 255, 255, 0.04);
+  --transition-fast: 0.22s ease;
+}
+
+/* Page root */
+.root {
+  position: relative;
+  min-height: 100vh;
+  color: var(--text);
+  background: var(--bg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Background video + overlay + particles */
+.bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 18, 32, 0.35),
+    rgba(15, 23, 36, 0.6)
+  );
+  opacity: 0.85;
+  z-index: 1;
+}
+
+/* canvas particles */
+.particles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* -------------------------
+   Header (desktop/tablet)
+   - visually distinct from mobile dropdown
+   ------------------------- */
+.header {
+  position: relative;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 28px;
+  gap: 16px;
+  margin: 1.5rem;
+  border-radius: 18px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: 0 8px 28px rgba(2, 8, 20, 0.6);
+  backdrop-filter: blur(8px) saturate(120%);
+}
+
+/* Header content layout */
+.headerContent {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Logo block */
+.logoWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.logo {
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  font-size: 1.28rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.tag {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-top: -2px;
+}
+
+/* Navigation (desktop) */
+.nav {
+  z-index: 50;
+}
+
+.nav ul {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav ul li {
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  transition: color var(--transition-fast);
+}
+
+.nav ul li a {
+  color: inherit;
+  text-decoration: none;
+  padding: 6px 8px;
+  display: inline-block;
+}
+
+.nav ul li:hover {
+  color: var(--accent-start);
+}
+
+/* Price chips & CTA in header */
+.priceChips {
+  display: flex;
+  gap: 10px;
+  margin-right: 8px;
+  align-items: center;
+}
+
+.ghost,
+.primary {
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid var(--border-weak);
+  background: transparent;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+  text-decoration: none;
+}
+
+.primary {
+  background: var(--accent-gradient);
+  color: #0b0b0b;
+  border: none;
+  box-shadow: 0 6px 18px rgba(255, 120, 0, 0.14);
+}
+
+/* hamburger (mobile trigger) - hidden on desktop */
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background var(--transition-fast);
+}
+
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* -------------------------
+   Mobile dropdown (distinct look)
+   - do NOT change classname
+   ------------------------- */
+.mobileDropdown {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 36, 0.98),
+    rgba(10, 14, 20, 0.98)
+  );
+  z-index: 3000;
+  padding: 92px 0 32px;
+  border-bottom: 3px solid rgba(255, 170, 0, 0.06);
+  box-shadow: 0 10px 40px rgba(2, 6, 20, 0.8);
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto; /* ensure links are clickable */
+  transition: transform 0.35s ease, opacity 0.35s ease;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+/* small variant: hide by default visually on desktop - controlled by JS presence */
+.mobileDropdown[hidden] {
+  display: none;
+}
+
+/* Mobile list layout */
+.mobileDropdown ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 20px;
+}
+
+.mobileDropdown li {
+  width: 100%;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.42s forwards ease;
+}
+
+/* staggered animation delays for mobile menu items */
+.mobileDropdown li:nth-child(1) {
+  animation-delay: 0.08s;
+}
+.mobileDropdown li:nth-child(2) {
+  animation-delay: 0.14s;
+}
+.mobileDropdown li:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.mobileDropdown li:nth-child(4) {
+  animation-delay: 0.26s;
+}
+.mobileDropdown li:nth-child(5) {
+  animation-delay: 0.32s;
+}
+.mobileDropdown li:nth-child(6) {
+  animation-delay: 0.38s;
+}
+.mobileDropdown li:nth-child(7) {
+  animation-delay: 0.44s;
+}
+
+.mobileDropdown li a {
+  display: block;
+  width: 100%;
+  padding: 14px 36px;
+  font-weight: 800;
+  font-size: 1.06rem;
+  letter-spacing: 0.3px;
+  color: var(--text);
+  text-decoration: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  position: relative;
+}
+
+.mobileDropdown li a:hover {
+  color: var(--accent-start);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile overlay (when dropdown open) */
+.mobileOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; /* under the dropdown so dropdown receives clicks */
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* -------------------------
+   Hero layout
+   ------------------------- */
+.hero {
+  position: relative;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 48px;
+  align-items: start;
+  padding: 56px 64px 80px;
+}
+
+.left {
+  max-width: 720px;
+}
+
+/* Headline & lead */
+.left h1 {
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  line-height: 1.02;
+  font-weight: 800;
+  margin: 0 0 18px 0;
+  color: #fff;
+}
+
+.gradient {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.title {
+  color: #fff;
+  text-align: left;
+}
+
+.lead {
+  color: var(--muted);
+  margin-bottom: 18px;
+  line-height: 1.9;
+  font-size: 1.12rem;
+  font-weight: 500;
+}
+
+/* early access form */
+.earlyaccessform {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.earlyaccessform input {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  outline: none;
+  font-size: 0.98rem;
+}
+
+.earlyaccessform .cta {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+  background: var(--accent-gradient);
+  color: #0b0b0b;
+  box-shadow: 0 8px 22px rgba(255, 110, 0, 0.12);
+}
+
+/* features */
+.featureGrid {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.feature {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  gap: 12px;
+  color: #fff;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--border-weak);
+}
+
+.feature .fIcon {
+  font-size: 1.2rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+}
+
+.feature .fTitle {
+  font-weight: 800;
+  font-size: 0.96rem;
+}
+
+.feature .fDesc {
+  font-size: 0.86rem;
+  margin-top: 2px;
+  color: var(--muted);
+}
+
+/* Right card (dashboard / KPI card) */
+.right {
+  display: flex;
+  align-items: flex-start;
+}
+
+.card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.98);
+  color: #0b1220; /* inverted text for contrast on light card */
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(2, 6, 20, 0.38);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  padding: 18px;
+  border: 1px solid rgba(11, 18, 32, 0.06);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cardTitle {
+  font-weight: 800;
+}
+.cardSub {
+  color: #333;
+  font-size: 0.85rem;
+}
+
+.cardKPI .kpiNum {
+  font-size: 1.6rem;
+  color: var(--accent-start);
+  font-weight: 900;
+}
+
+/* mini chart shimmer */
+.liveChart .miniChart {
+  height: 86px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba(76, 161, 175, 0.06),
+    rgba(255, 171, 0, 0.04)
+  );
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(11, 18, 32, 0.03);
+}
+
+.liveChart .miniChartShimmer {
+  position: absolute;
+  left: -120px;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.06)
+  );
+  animation: shimmer 2.1s linear infinite;
+  opacity: 0.9;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(420px);
+  }
+}
+
+/* coin list styles */
+.coinList {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.coinRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+}
+
+/* coin label */
+.coinLabel {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.coinAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+/* micro CTA area */
+.cardFooter {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.cardFooter .smallText {
+  color: #444;
+  font-size: 0.85rem;
+}
+.cardFooter .footerActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* micro CTA and links */
+.microCTA {
+  margin: 36px 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  gap: 12px;
+}
+
+.link {
+  margin-left: 12px;
+  color: var(--accent-start);
+  text-decoration: none;
+}
+
+/* -------------------------
+   Responsive rules
+   ------------------------- */
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 36px 20px 80px;
+    gap: 24px;
+  }
+
+  .nav ul {
+    display: none;
+  }
+  .priceChips {
+    display: none;
+  }
+
+  .microCTA {
+    margin: 28px 20px;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  /* show hamburger on mobile */
+  .hamburger {
+    display: flex;
+    position: relative;
+    margin-top: -1.9rem;
+  }
+  /* mobile dropdown always visible in markup but visually controlled with presence */
+  .mobileDropdown {
+    display: block;
+    height: 100vh;
+  }
+}
+
+@media (max-width: 520px) {
+  .header {
+    padding: 1.5rem 14px;
+    margin: 0.6rem;
+    border-radius: 12px;
+  }
+  .logo {
+    font-size: 1.05rem;
+  }
+  .left h1 {
+    font-size: 1.3rem;
+  }
+  .earlyaccessform input {
+    padding: 10px;
+    font-size: 0.92rem;
+  }
+  .featureGrid {
+    flex-direction: column;
+  }
+  .card {
+    padding: 14px;
+  }
+}
+
+/* utility tweaks */
+a {
+  color: inherit;
+}
+button {
+  font-family: inherit;
+}
+
+/* Accessibility & focus */
+a:focus,
+button:focus {
+  outline: 3px solid rgba(255, 171, 0, 0.18);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
