@@ -7,7 +7,7 @@ export default function plans () {
     <div className='root'>
       <video autoPlay loop muted playsInline className='bg-video'>
         <source
-          src='https://cdn.pixabay.com/video/2025/06/27/288182_large.mp4'
+          src='https://cdn.pixabay.com/video/2022/10/03/133361-756618034_tiny.mp4'
           type='video/mp4'
         />
       </video>
