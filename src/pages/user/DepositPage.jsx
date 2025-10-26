@@ -355,30 +355,36 @@ function DepositPageContent () {
         return (
           <div className='instruction-card'>
             <p className='label'>Bank Transfer Details:</p>
-            <p>Bank: Example Bank</p>
-            <span>Acc No: 2006448310</span>
-            <p>Name: Smart Pocket Ltd</p>
+            <p>Not Availble Now</p>
+            {/* <span>Acc No: 2006448310</span>
+            <p>Name: Smart Pocket Ltd</p> */}
           </div>
         )
       case 'cashapp':
         return (
           <div className='instruction-card'>
             <p className='label'>CashApp Tag:</p>
-            <span>$Smart Pocket</span>
+            <span>
+              <p>Not Availble Now</p>
+            </span>
           </div>
         )
       case 'googlepay':
         return (
           <div className='instruction-card'>
             <p className='label'>Google Pay ID:</p>
-            <span>Smart Pocket@bank.com</span>
+            <span>
+              <p>Not Availble Now</p>
+            </span>
           </div>
         )
       case 'applepay':
         return (
           <div className='instruction-card'>
             <p className='label'>Apple Pay ID:</p>
-            <span>Smart Pocket@icloud.com</span>
+            <span>
+              <p>Not Availble Now</p>
+            </span>
           </div>
         )
       case 'card':
