@@ -216,10 +216,10 @@ export default function MainHeader () {
       )
 
       // Redirect
-      window.location.href = '/auth/Login'
+      window.location.href = 'https://smtpocket.com/'
     } catch (err) {
       console.error('Logout error:', err)
-      window.location.href = '/auth/Login' // still force redirect
+      window.location.href = 'https://smtpocket.com/' // still force redirect
     }
   }
 
@@ -248,8 +248,10 @@ export default function MainHeader () {
 
       <header className='dashboard-header'>
         <div className='logo-section'>
-          <Link href='/user/UserDashboard'>
-            <span className='brand-name'>Smart Pocket</span>
+          <Link href='https://smtpocket.com/'>
+            <span className='brand-name'>
+              {process.env.NEXT_PUBLIC_APP_NAME}
+            </span>
           </Link>
           {/* <img
             src='https://res.cloudinary.com/da26wgev2/image/upload/v1761134034/receipts/bmnhjzee3cynfi5w3djz.png'

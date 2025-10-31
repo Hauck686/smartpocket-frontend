@@ -294,11 +294,14 @@ export default function AdminHeader () {
     <div>
       <header className='dashboard-header'>
         <div className='logo-section'>
-          <img
+          {/* <img
             src='https://res.cloudinary.com/da26wgev2/image/upload/v1761134034/receipts/bmnhjzee3cynfi5w3djz.png'
             alt='company logo'
             className='brand-name'
-          />
+          /> */}
+          <a href='https://smtpocket.com/'>
+            <h3>{process.env.NEXT_PUBLIC_APP_NAME}</h3>
+          </a>
         </div>
         <div className='header-actions'>
           <>

@@ -170,7 +170,7 @@ export default function RegistrationPage () {
       <ToastContainer />
       <div className={'formCard'}>
         <h2>Sign Up</h2>
-        <p>Create an account with Smart Pocket</p>
+        <p>Create an account with {process.env.NEXT_PUBLIC_APP_NAME}</p>
 
         <form onSubmit={handleRegister} className={'form'}>
           <div className={'formRow'}>

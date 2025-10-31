@@ -33,8 +33,12 @@ export default function Header () {
   return (
     <header className='header' role='banner'>
       <div>
-        <a href='/' className='logoWrap' aria-label='Smart Pocket home'>
-          <div className='logo'>Smart Pocket</div>
+        <a
+          href='/'
+          className='logoWrap'
+          aria-label='{process.env.NEXT_PUBLIC_APP_NAME} home'
+        >
+          <div className='logo'>{process.env.NEXT_PUBLIC_APP_NAME}</div>
           <div className='tag'>Wallet & Exchange</div>
         </a>
       </div>

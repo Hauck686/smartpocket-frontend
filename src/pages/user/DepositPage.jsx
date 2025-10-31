@@ -357,7 +357,7 @@ function DepositPageContent () {
             <p className='label'>Bank Transfer Details:</p>
             <p>Not Availble Now</p>
             {/* <span>Acc No: 2006448310</span>
-            <p>Name: Smart Pocket Ltd</p> */}
+            <p>Name: {process.env.NEXT_PUBLIC_APP_NAME} Ltd</p> */}
           </div>
         )
       case 'cashapp':
@@ -415,7 +415,8 @@ function DepositPageContent () {
       <div className='deposit-container'>
         <div className='sponsor-bar'>
           <p>
-            ⚡ Deposits processed securely by <b>Smart Pocket</b>
+            ⚡ Deposits processed securely by{' '}
+            <b>{process.env.NEXT_PUBLIC_APP_NAME}</b>
           </p>
         </div>
 

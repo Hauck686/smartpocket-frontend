@@ -72,8 +72,11 @@ export default function Index () {
     <div className='login'>
       {/* Site Head */}
       <Head>
-        <title>Login | Smart Pocket</title>
-        <meta name='description' content='Login to your Smart Pocket account' />
+        <title>Login | {process.env.NEXT_PUBLIC_APP_NAME}</title>
+        <meta
+          name='description'
+          content='Login to your {process.env.NEXT_PUBLIC_APP_NAME} account'
+        />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link
           rel='icon'

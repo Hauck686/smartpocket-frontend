@@ -104,8 +104,9 @@ export default function ReferralPage () {
 
           <div className='referral-tip'>
             You earn a bonus of{' '}
-            <span className='reward-amount'>${user?.referralBonus || 10} </span>
-            from referrals.
+            <span className='reward-amount'>
+              {user?.referralBonus || 10}% referred user deposit{' '}
+            </span>
           </div>
         </div>
 

@@ -108,7 +108,8 @@ export default function WithdrawPage () {
         {/* Sponsor bar (same as DepositPage) */}
         <div className='sponsor-bar'>
           <p>
-            ⚡ Withdrawals processed securely by <b>Smart Pocket</b>
+            ⚡ Withdrawals processed securely by{' '}
+            <b>{process.env.NEXT_PUBLIC_APP_NAME}</b>
           </p>
         </div>
 

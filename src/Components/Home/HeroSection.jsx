@@ -171,7 +171,8 @@ export default function AdvancedCryptoHero () {
             transition={{ delay: 0.1, duration: 0.8 }}
             className='title'
           >
-            Smart Pocket <span className='gradient'>Investment & Airdrop </span>
+            {process.env.NEXT_PUBLIC_APP_NAME}{' '}
+            <span className='gradient'>Investment & Airdrop </span>
           </motion.h1>
 
           <motion.p

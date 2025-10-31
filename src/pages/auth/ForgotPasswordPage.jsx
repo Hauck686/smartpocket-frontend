@@ -80,10 +80,10 @@ export default function ForgotPasswordPage () {
   return (
     <div className='login'>
       <Head>
-        <title>Forgot Password | Smart Pocket</title>
+        <title>Forgot Password | {process.env.NEXT_PUBLIC_APP_NAME}</title>
         <meta
           name='description'
-          content='Forgot your Smart Pocket account password?'
+          content='Forgot your {process.env.NEXT_PUBLIC_APP_NAME} account password?'
         />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link
