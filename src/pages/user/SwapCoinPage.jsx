@@ -20,16 +20,17 @@ export default function SwapCoinPage () {
   const [wallets, setWallets] = useState([])
   const [coinRates, setCoinRates] = useState({})
   const [availableCoins, setAvailableCoins] = useState([])
-  const [fromCoin, setFromCoin] = useState('USDT')
+  const [fromCoin, setFromCoin] = useState('BTC')
   const [toCoin, setToCoin] = useState('SOL')
   const [amount, setAmount] = useState('')
-  const [receiveAmount, setReceiveAmount] = useState(0)
+  const [receiveUSD, setReceiveUSD] = useState(0)
   const [loading, setLoading] = useState(true)
   const [swapping, setSwapping] = useState(false)
 
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('authToken') : null
 
+  // ✅ Fetch wallets & coin prices
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,22 +39,34 @@ export default function SwapCoinPage () {
           window.location.href = '/auth/Login'
           return
         }
+
+        // User wallets
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         )
+
         const userWallets = res.data.wallets || []
-        setWallets(userWallets)
-        const walletSymbols = userWallets
-          .map(w => w.symbol.toUpperCase())
+        const normalizedWallets = userWallets.map(w => ({
+          ...w,
+          symbol: w.symbol?.toUpperCase().trim(),
+          network: w.network?.trim() || ''
+        }))
+        setWallets(normalizedWallets)
+
+        const walletSymbols = normalizedWallets
+          .map(w => w.symbol)
           .filter(s => symbolToId[s])
+
         setAvailableCoins(walletSymbols)
+
         if (walletSymbols.length > 0) {
           const ids = walletSymbols.map(s => symbolToId[s]).join(',')
           const coinRes = await axios.get(
             `https://api.coingecko.com/api/v3/simple/price`,
             { params: { ids, vs_currencies: 'usd' } }
           )
+
           const rates = {}
           walletSymbols.forEach(symbol => {
             const id = symbolToId[symbol]
@@ -67,43 +80,77 @@ export default function SwapCoinPage () {
         setLoading(false)
       }
     }
+
     fetchData()
   }, [token])
 
+  // ✅ Recalculate receive amount (USD display)
   useEffect(() => {
-    const fromRate = coinRates[fromCoin]
-    const toRate = coinRates[toCoin]
-    if (fromRate && toRate && amount && fromCoin !== toCoin) {
+    if (amount && fromCoin !== toCoin) {
       const usdAmount = parseFloat(amount)
-      const toCoinAmount = usdAmount / toRate
-      setReceiveAmount(toCoinAmount)
+      setReceiveUSD(usdAmount) // Show as USD equivalent
     } else {
-      setReceiveAmount(0)
+      setReceiveUSD(0)
     }
   }, [amount, fromCoin, toCoin, coinRates])
 
+  // ✅ Get wallet balance
+  const getBalance = symbol => {
+    const wallet = wallets.find(w => w.symbol === symbol)
+    return wallet ? parseFloat(wallet.balance || 0) : 0
+  }
+
+  const handleSetMax = () => setAmount(getBalance(fromCoin).toString())
+
+  const handleSwitchCoins = () => {
+    setFromCoin(toCoin)
+    setToCoin(fromCoin)
+    setAmount('')
+    setReceiveUSD(0)
+  }
+
+  // ✅ Swap
   const handleSwap = async () => {
     const usdAmount = parseFloat(amount)
-    if (!usdAmount || usdAmount <= 0) return alert('Enter a valid USD amount')
+    if (!usdAmount || usdAmount <= 0) return alert('Enter a valid amount')
     if (fromCoin === toCoin) return alert('Cannot swap the same coin')
+
     const fromWallet = wallets.find(w => w.symbol === fromCoin)
     if (!fromWallet || usdAmount > fromWallet.balance)
-      return alert('Insufficient balance in USD')
+      return alert('Insufficient USD balance')
+
     try {
       setSwapping(true)
       const userId = await getVerifiedUserId()
+
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/transactions/swap`,
-        { userId, fromCoin, toCoin, amount: usdAmount, receiveAmount },
+        {
+          userId,
+          fromCoin,
+          toCoin,
+          amountUSD: parseFloat(amount), // ✅ Make sure this key name matches backend
+          receiveAmount: parseFloat(receiveUSD)
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       )
-      alert(`✅ Swapped $${usdAmount} from ${fromCoin} to ${toCoin}`)
+
+      alert(`✅ Swapped $${usdAmount.toFixed(2)} from ${fromCoin} → ${toCoin}`)
+
+      // Refresh balances
       const updated = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       )
-      setWallets(updated.data.wallets)
+
+      const refreshed = updated.data.wallets.map(w => ({
+        ...w,
+        symbol: w.symbol?.toUpperCase().trim(),
+        network: w.network?.trim() || ''
+      }))
+      setWallets(refreshed)
       setAmount('')
+      setReceiveUSD(0)
     } catch (err) {
       console.error('Swap failed:', err)
       alert('❌ Swap failed. Try again later.')
@@ -112,23 +159,12 @@ export default function SwapCoinPage () {
     }
   }
 
-  const getBalance = symbol =>
-    wallets.find(w => w.symbol === symbol)?.balance || 0
-  const handleSetMax = () => setAmount(getBalance(fromCoin).toString())
-  const handleSwitchCoins = () => {
-    setFromCoin(toCoin)
-    setToCoin(fromCoin)
-    setAmount('')
-    setReceiveAmount(0)
-  }
-
-  if (loading) {
+  if (loading)
     return (
       <div className='swap-page__loader'>
         <div className='spinner'></div>
       </div>
     )
-  }
 
   return (
     <div className='swap-page'>
@@ -137,27 +173,26 @@ export default function SwapCoinPage () {
         <span className='swap-account-value'>Funding Account ▼</span>
       </div>
 
+      {/* FROM */}
       <div className='swap-card'>
         <div className='swap-card__row'>
           <div className='swap-card__icon'>
-            <img
-              src={`/coins/${fromCoin}.svg`}
-              alt={fromCoin}
-              onError={e => (e.target.style.display = 'none')}
-            />
+            <img src={`/${fromCoin}.png`} alt={fromCoin} />
           </div>
-          <select value={fromCoin} onChange={e => setFromCoin(e.target.value)}>
+          <select
+            value={fromCoin}
+            onChange={e => setFromCoin(e.target.value)}
+            disabled={swapping}
+          >
             {availableCoins.map(symbol => (
-              <option key={symbol} value={symbol}>
-                {symbol}
-              </option>
+              <option key={symbol}>{symbol}</option>
             ))}
           </select>
           <div className='swap-card__right'>
             <span className='swap-card__balance'>
-              Available balance {getBalance(fromCoin)}
+              Available: ${getBalance(fromCoin).toFixed(2)}
             </span>
-            <button className='swap-card__max' onClick={handleSetMax}>
+            <button onClick={handleSetMax} disabled={swapping}>
               Max
             </button>
           </div>
@@ -167,62 +202,54 @@ export default function SwapCoinPage () {
           type='number'
           value={amount}
           onChange={e => setAmount(e.target.value)}
-          placeholder='0.00'
+          placeholder='Enter USD amount'
         />
       </div>
 
       <div className='swap-icon-wrap' onClick={handleSwitchCoins}>
-        <div className='swap-icon'>
-          <SwapVertIcon fontSize='large' />
-        </div>
+        <SwapVertIcon fontSize='large' />
       </div>
 
+      {/* TO */}
       <div className='swap-card'>
         <div className='swap-card__row'>
           <div className='swap-card__icon'>
-            <img
-              src={`/coins/${toCoin}.svg`}
-              alt={toCoin}
-              onError={e => (e.target.style.display = 'none')}
-            />
+            <img src={`/${toCoin}.png`} alt={toCoin} />
           </div>
-          <select value={toCoin} onChange={e => setToCoin(e.target.value)}>
+          <select
+            value={toCoin}
+            onChange={e => setToCoin(e.target.value)}
+            disabled={swapping}
+          >
             {availableCoins.map(symbol => (
-              <option key={symbol} value={symbol}>
-                {symbol}
-              </option>
+              <option key={symbol}>{symbol}</option>
             ))}
           </select>
         </div>
         <input
           className='swap-card__amount'
           disabled
-          value={receiveAmount > 0 ? receiveAmount.toFixed(8) : ''}
-          placeholder='0.00'
+          value={receiveUSD > 0 ? `$${receiveUSD.toFixed(2)}` : ''}
+          placeholder='$0.00'
         />
       </div>
 
+      {/* RATES */}
       <div className='swap-rates'>
-        1 {fromCoin} ≈{' '}
-        {coinRates[fromCoin] && coinRates[toCoin]
-          ? (coinRates[fromCoin] / coinRates[toCoin]).toFixed(8)
-          : '--'}{' '}
-        {toCoin}
+        1 {toCoin} ≈ ${coinRates[toCoin] ? coinRates[toCoin].toFixed(2) : '--'}
       </div>
 
+      {/* DETAILS */}
       <div className='swap-details-row'>
         <span>Fee</span>
         <span className='swap-fee'>0 fee</span>
       </div>
+
       <div className='swap-details-row'>
         <span>Receive</span>
         <span className='swap-receive'>
-          {receiveAmount > 0 ? receiveAmount.toFixed(8) : '0.00'} {toCoin}
+          {receiveUSD > 0 ? `$${receiveUSD.toFixed(2)}` : '$0.00'}
         </span>
-      </div>
-
-      <div className='swap-oneclick'>
-        One-Click Buy <span className='swap-oneclick__arrow'>&rarr;</span>
       </div>
 
       <button
@@ -230,7 +257,7 @@ export default function SwapCoinPage () {
         onClick={handleSwap}
         disabled={!amount || fromCoin === toCoin || swapping}
       >
-        {swapping ? 'Swapping...' : 'Quote'}
+        {swapping ? 'Swapping...' : 'Swap'}
       </button>
     </div>
   )
