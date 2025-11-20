@@ -75,7 +75,7 @@ export default function Index () {
         <title>Login | {process.env.NEXT_PUBLIC_APP_NAME}</title>
         <meta
           name='description'
-          content='Login to your {process.env.NEXT_PUBLIC_APP_NAME} account'
+          content={`Login to your ${process.env.NEXT_PUBLIC_APP_NAME} account`}
         />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link

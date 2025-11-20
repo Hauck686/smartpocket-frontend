@@ -83,7 +83,7 @@ export default function ForgotPasswordPage () {
         <title>Forgot Password | {process.env.NEXT_PUBLIC_APP_NAME}</title>
         <meta
           name='description'
-          content='Forgot your {process.env.NEXT_PUBLIC_APP_NAME} account password?'
+          content={`Forgot your ${process.env.NEXT_PUBLIC_APP_NAME} account password?`}
         />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link

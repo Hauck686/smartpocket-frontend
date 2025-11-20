@@ -36,7 +36,7 @@ export default function Header () {
         <a
           href='/'
           className='logoWrap'
-          aria-label='{process.env.NEXT_PUBLIC_APP_NAME} home'
+          aria-label={`${process.env.NEXT_PUBLIC_APP_NAME} home`}
         >
           <div className='logo'>{process.env.NEXT_PUBLIC_APP_NAME}</div>
           <div className='tag'>Wallet & Exchange</div>

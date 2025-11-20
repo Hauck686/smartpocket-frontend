@@ -13,19 +13,19 @@ class MyDocument extends Document {
           {/* Primary SEO Meta */}
           <meta
             name='title'
-            content='{process.env.NEXT_PUBLIC_APP_NAME} | Trusted Investment, Loan & Savings Company'
+            content={`${process.env.NEXT_PUBLIC_APP_NAME} | Trusted Investment, Loan & Savings Company`}
           />
           <meta
             name='description'
-            content='{process.env.NEXT_PUBLIC_APP_NAME} is a reliable financial platform offering secure investments, flexible loan options, and smart savings plans. Build wealth confidently with transparent services and expert financial support.'
+            content={`${process.env.NEXT_PUBLIC_APP_NAME} is a reliable financial platform offering secure investments, flexible loan options, and smart savings plans. Build wealth confidently with transparent services and expert financial support.`}
           />
           <meta
             name='keywords'
-            content='{process.env.NEXT_PUBLIC_APP_NAME}, investment company, savings platform, loan services, financial planning, secure investment, personal finance, wealth growth, lending solutions, high-yield savings'
+            content={`${process.env.NEXT_PUBLIC_APP_NAME}, investment company, savings platform, loan services, financial planning, secure investment, personal finance, wealth growth, lending solutions, high-yield savings`}
           />
           <meta
             name='author'
-            content='{process.env.NEXT_PUBLIC_APP_NAME} Finance'
+            content={`${process.env.NEXT_PUBLIC_APP_NAME} Finance`}
           />
 
           {/* Open Graph / Facebook */}
@@ -33,11 +33,11 @@ class MyDocument extends Document {
           <meta property='og:url' content='https://www.smartpocket.com/' />
           <meta
             property='og:title'
-            content='{process.env.NEXT_PUBLIC_APP_NAME} | Trusted Investment, Loan & Savings Company'
+            content={`${process.env.NEXT_PUBLIC_APP_NAME} | Trusted Investment, Loan & Savings Company`}
           />
           <meta
             property='og:description'
-            content='Invest, save, and borrow smarter with {process.env.NEXT_PUBLIC_APP_NAME}. Transparent, secure, and customer-focused financial services for your growth.'
+            content={`Invest, save, and borrow smarter with ${process.env.NEXT_PUBLIC_APP_NAME}. Transparent, secure, and customer-focused financial services for your growth.`}
           />
           <meta
             property='og:image'
@@ -49,7 +49,7 @@ class MyDocument extends Document {
           <meta name='twitter:url' content='https://www.smtpocket.com/' />
           <meta
             name='twitter:title'
-            content='{process.env.NEXT_PUBLIC_APP_NAME} | Trusted Investment, Loan & Savings Company'
+            content={`${process.env.NEXT_PUBLIC_APP_NAME} | Trusted Investment, Loan & Savings Company`}
           />
           <meta
             name='twitter:description'
@@ -85,11 +85,10 @@ class MyDocument extends Document {
               __html: JSON.stringify({
                 '@context': 'https://schema.org',
                 '@type': 'FinancialService',
-                name: '{process.env.NEXT_PUBLIC_APP_NAME}',
+                name: `${process.env.NEXT_PUBLIC_APP_NAME}`,
                 url: 'https://www.smtpocket.com',
                 logo: 'https://res.cloudinary.com/da26wgev2/image/upload/v1761134034/receipts/bmnhjzee3cynfi5w3djz.png',
-                description:
-                  '{process.env.NEXT_PUBLIC_APP_NAME} provides secure investment, flexible loan, and savings services designed to help individuals and businesses grow wealth confidently.',
+                description: `${process.env.NEXT_PUBLIC_APP_NAME} provides secure investment, flexible loan, and savings services designed to help individuals and businesses grow wealth confidently.`,
                 sameAs: [
                   'https://facebook.com/smartpocket',
                   'https://twitter.com/smartpocket',
