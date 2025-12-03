@@ -7,6 +7,10 @@ const withTM = require('next-transpile-modules')([
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverActions: { allowedOrigins: ['172.20.10.4'] },
+    allowedDevOrigins: ['http://172.20.10.4:3000']
+  },
   output: 'export',
   images: {
     unoptimized: true,

@@ -173,8 +173,8 @@ export default function AdminHeader () {
         },
         {
           icon: <MessagesSquare />,
-          label: 'Send SMS',
-          path: '/admin/SendSMSPage'
+          label: 'Send Email',
+          path: '/admin/SendEmailPage'
         },
         {
           icon: <PartyPopper />,

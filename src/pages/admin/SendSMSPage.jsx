@@ -1,163 +1,119 @@
-// File: pages/admin/sms-settings.jsx
 'use client'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 
-import React, { useState } from 'react'
+export default function SendEmailPage () {
+  const [users, setUsers] = useState([])
+  const [selectedUser, setSelectedUser] = useState('')
+  const [subject, setSubject] = useState('')
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
-import {
-  Box,
-  Typography,
-  Paper,
-  Grid,
-  TextField,
-  MenuItem,
-  Button,
-  Snackbar,
-  Alert
-} from '@mui/material'
+  // Fetch all users
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem('authToken')
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        setUsers(res.data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    fetchUsers()
+  }, [])
 
-const smsProviders = [
-  { label: 'Twilio', value: 'twilio' },
-  { label: 'Nexmo', value: 'nexmo' },
-  { label: 'Custom Gateway', value: 'custom' }
-]
+  // Send email handler
+  const sendEmail = async () => {
+    if (!selectedUser || !subject || !message) {
+      alert('Please fill all fields')
+      return
+    }
 
-export default function SmsSettingsPage () {
-  const [form, setForm] = useState({
-    provider: 'twilio',
-    apiKey: '',
-    apiSecret: '',
-    senderId: '',
-    phoneNumber: ''
-  })
+    try {
+      setLoading(true)
+      const token = localStorage.getItem('authToken')
 
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success'
-  })
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/send-email`,
+        {
+          userId: selectedUser,
+          subject,
+          message
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const handleSave = () => {
-    setSnackbar({
-      open: true,
-      message: 'SMS settings saved!',
-      severity: 'success'
-    })
-    // Send form to backend
-  }
-
-  const handleSendTestSMS = () => {
-    // Ideally send a test SMS using API
-    setSnackbar({ open: true, message: 'Test SMS sent!', severity: 'info' })
+      alert('Email sent successfully')
+      setSubject('')
+      setMessage('')
+      setSelectedUser('')
+    } catch (err) {
+      console.error(err)
+      alert('Failed to send email')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <>
-      <Box
-        sx={{ p: { xs: 2, md: 4 }, background: '#f5f7fb', minHeight: '100vh' }}
+    <div style={{ padding: '30px', maxWidth: '600px', margin: '0 auto' }}>
+      <h1>Send Email to User</h1>
+
+      <div style={{ marginTop: '20px' }}>
+        <label>User</label>
+        <select
+          value={selectedUser}
+          onChange={e => setSelectedUser(e.target.value)}
+          style={{ width: '100%', padding: '10px', marginTop: '5px' }}
+        >
+          <option value=''>Select user</option>
+          {users.map(u => (
+            <option key={u._id} value={u._id}>
+              {u.firstname} {u.lastname} — {u.email}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div style={{ marginTop: '20px' }}>
+        <label>Subject</label>
+        <input
+          type='text'
+          value={subject}
+          onChange={e => setSubject(e.target.value)}
+          style={{ width: '100%', padding: '10px' }}
+        />
+      </div>
+
+      <div style={{ marginTop: '20px' }}>
+        <label>Message</label>
+        <textarea
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          rows='6'
+          style={{ width: '100%', padding: '10px' }}
+        ></textarea>
+      </div>
+
+      <button
+        onClick={sendEmail}
+        disabled={loading}
+        style={{
+          marginTop: '20px',
+          padding: '15px',
+          width: '100%',
+          background: loading ? '#aaa' : '#000',
+          color: '#fff',
+          cursor: 'pointer'
+        }}
       >
-        <Typography variant='h5' fontWeight={700} mb={3}>
-          📲 SMS Gateway Configuration
-        </Typography>
-
-        <Paper sx={{ p: 3, borderRadius: 3 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                select
-                label='SMS Provider'
-                name='provider'
-                value={form.provider}
-                onChange={handleChange}
-                fullWidth
-              >
-                {smsProviders.map(p => (
-                  <MenuItem key={p.value} value={p.value}>
-                    {p.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label='API Key'
-                name='apiKey'
-                value={form.apiKey}
-                onChange={handleChange}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label='API Secret'
-                name='apiSecret'
-                type='password'
-                value={form.apiSecret}
-                onChange={handleChange}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label='Sender ID'
-                name='senderId'
-                value={form.senderId}
-                onChange={handleChange}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label='Test Phone Number'
-                name='phoneNumber'
-                value={form.phoneNumber}
-                onChange={handleChange}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              display='flex'
-              alignItems='center'
-              justifyContent='space-between'
-            >
-              <Button
-                variant='outlined'
-                color='secondary'
-                onClick={handleSendTestSMS}
-              >
-                Send Test SMS
-              </Button>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button variant='contained' onClick={handleSave}>
-                Save Settings
-              </Button>
-            </Grid>
-          </Grid>
-        </Paper>
-      </Box>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert severity={snackbar.severity} variant='filled'>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </>
+        {loading ? 'Sending...' : 'Send Email'}
+      </button>
+    </div>
   )
 }
